@@ -1,0 +1,8 @@
+{
+  "public": {
+    "appName": "Notification System"
+  },
+  "private": {
+    "MONGO_URL": "mongodb://localhost:27017/notifications"
+  }
+}
