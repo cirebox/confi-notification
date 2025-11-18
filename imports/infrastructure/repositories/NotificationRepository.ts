@@ -13,7 +13,8 @@ export class NotificationRepository implements INotificationRepository {
   }
 
   async findById(id: string): Promise<INotification | null> {
-    return await NotificationsCollection.findOneAsync({ _id: id });
+    const result = await NotificationsCollection.findOneAsync({ _id: id });
+    return result || null;
   }
 
   async markAsRead(id: string): Promise<number> {

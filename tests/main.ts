@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { expect } from 'chai';
-import { NotificationsCollection } from '../domain/entities/Notification';
-import '../api/methods/notificationMethods';
+import { NotificationsCollection } from '../imports/domain/entities/Notification';
+import '../imports/api/methods/notificationMethods';
 
 if (Meteor.isServer) {
   describe('Notification System - Use Cases', function () {
