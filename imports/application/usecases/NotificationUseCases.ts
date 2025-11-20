@@ -2,4 +2,3 @@
 export { CreateNotificationUseCase } from './CreateNotificationUseCase';
 export { MarkNotificationAsReadUseCase } from './MarkNotificationAsReadUseCase';
 export { RemoveNotificationUseCase } from './RemoveNotificationUseCase';
-

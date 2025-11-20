@@ -8,7 +8,11 @@ export class NotificationValidator {
       errors.push('userId é obrigatório e não pode estar vazio');
     }
 
-    if (!message || typeof message !== 'string' || message.trim().length === 0) {
+    if (
+      !message ||
+      typeof message !== 'string' ||
+      message.trim().length === 0
+    ) {
       errors.push('message é obrigatório e não pode estar vazio');
     }
 
@@ -27,7 +31,10 @@ export class NotificationValidator {
     }
   }
 
-  static validatePagination(page: number, limit: number): { page: number; limit: number; skip: number } {
+  static validatePagination(
+    page: number,
+    limit: number
+  ): { page: number; limit: number; skip: number } {
     const safePage = Math.max(1, parseInt(String(page)) || 1);
     const safeLimit = Math.min(100, Math.max(1, parseInt(String(limit)) || 10));
 

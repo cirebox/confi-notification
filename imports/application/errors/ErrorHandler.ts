@@ -23,10 +23,17 @@ const ERROR_STATUS_MAP: Record<ErrorCode, HttpStatus> = {
   [ErrorCode.INTERNAL_ERROR]: HttpStatus.INTERNAL_SERVER_ERROR,
 };
 
+interface MeteorErrorWithStatus extends Meteor.Error {
+  statusCode: HttpStatus;
+}
+
 export class ErrorHandler {
-  static createMeteorError(code: ErrorCode, message: string): Meteor.Error {
-    const error = new Meteor.Error(code, message);
-    (error as any).statusCode = ERROR_STATUS_MAP[code];
+  static createMeteorError(
+    code: ErrorCode,
+    message: string
+  ): MeteorErrorWithStatus {
+    const error = new Meteor.Error(code, message) as MeteorErrorWithStatus;
+    error.statusCode = ERROR_STATUS_MAP[code];
     return error;
   }
 

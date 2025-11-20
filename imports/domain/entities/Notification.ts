@@ -9,4 +9,6 @@ export interface INotification {
   createdAt: Date;
 }
 
-export const NotificationsCollection = new Mongo.Collection<INotification>('notifications');
+export const NotificationsCollection = new Mongo.Collection<INotification>(
+  'notifications'
+);
