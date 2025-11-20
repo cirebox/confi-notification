@@ -64,9 +64,11 @@ export const seedNotifications = async (): Promise<void> => {
       `🔄 Migrando ${oldNotifications.length} notificações antigas para usuário demo...`
     );
     for (const notif of oldNotifications) {
-      await NotificationsCollection.updateAsync(notif._id, {
-        $set: { userId },
-      });
+      if (notif._id) {
+        await NotificationsCollection.updateAsync(notif._id, {
+          $set: { userId },
+        });
+      }
     }
     console.log('✅ Notificações migradas');
   }

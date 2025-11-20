@@ -20,17 +20,17 @@ Accounts.config({
 });
 
 // Validação de novos usuários (opcional)
-Accounts.validateNewUser((user) => {
+Accounts.validateNewUser((user: Meteor.User) => {
   // Você pode adicionar validações customizadas aqui
   return true;
 });
 
 // Log de tentativas de login (para debug)
-Accounts.onLogin((loginInfo) => {
+Accounts.onLogin((loginInfo: { user?: Meteor.User; connection?: any }) => {
   console.log('✅ Login bem-sucedido:', loginInfo.user?.emails?.[0]?.address);
 });
 
-Accounts.onLoginFailure((loginInfo) => {
+Accounts.onLoginFailure((loginInfo: { user?: Meteor.User; connection?: any; error?: any; allowed?: boolean; type?: string; methodName?: string }) => {
   console.log('❌ Falha no login:', {
     error: loginInfo.error?.reason,
     allowed: loginInfo.allowed,
