@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "lib": ["ES2022", "DOM"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "allowJs": false,
     "noEmit": true,
-    "baseUrl": ".",
+    "jsx": "react-jsx",
     "paths": {
       "/imports/*": ["./imports/*"],
       "/server/*": ["./server/*"],

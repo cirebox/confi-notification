@@ -14,6 +14,18 @@ services:
     networks:
       - notification-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: notification-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - notification-network
+
   app:
     build: .
     container_name: notification-app
@@ -24,13 +36,17 @@ services:
       MONGO_URL: mongodb://mongodb:27017/notifications
       ROOT_URL: http://localhost:3000
       PORT: 3000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on:
       - mongodb
+      - redis
     networks:
       - notification-network
 
 volumes:
   mongo_data:
+  redis_data:
 
 networks:
   notification-network:

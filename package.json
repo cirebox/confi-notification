@@ -3,17 +3,28 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "meteor run --settings settings.json",
+    "start": "NODE_OPTIONS=\"--no-deprecation\" meteor run --settings settings.json",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test:watch": "meteor test --driver-package meteortesting:mocha",
+    "test:coverage": "nyc meteor test --once --driver-package meteortesting:mocha",
+    "coverage": "nyc report --reporter=html --reporter=text",
+    "coverage:analyze": "node analyze-coverage.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint 'imports/**/*.{ts,tsx}' 'server/**/*.ts' 'client/**/*.tsx'",
     "format": "prettier --write 'imports/**/*.{ts,tsx}' 'server/**/*.ts' 'client/**/*.tsx'"
   },
   "dependencies": {
     "@babel/runtime": "^7.23.5",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "@types/redis": "^4.0.10",
+    "date-fns": "^4.1.0",
     "meteor-node-stubs": "^1.2.12",
-    "simpl-schema": "^3.4.6"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "redis": "^5.9.0",
+    "simpl-schema": "^3.4.6",
+    "swagger-ui-express": "^5.0.1"
   },
   "meteor": {
     "mainModule": {
@@ -23,14 +34,18 @@
     "testModule": "tests/main.ts"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.11",
     "@types/meteor": "^2.9.10",
     "@types/mocha": "^10.0.6",
-    "@types/chai": "^4.3.11",
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "chai": "^4.3.10",
     "eslint": "^8.56.0",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-report": "^3.0.1",
+    "istanbul-reports": "^3.2.0",
+    "nyc": "^17.1.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
   }

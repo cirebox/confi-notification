@@ -4,5 +4,11 @@
   },
   "private": {
     "MONGO_URL": "mongodb://localhost:27017/notifications"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "password": null,
+    "db": 0
   }
 }
