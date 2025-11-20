@@ -2,8 +2,13 @@ import { expect } from 'chai';
 import { MarkNotificationAsReadUseCase } from '../imports/application/usecases/MarkNotificationAsReadUseCase';
 import { NotificationRepository } from '../imports/infrastructure/repositories/NotificationRepository';
 import { NotFoundError, BusinessRuleError, ValidationError } from '../imports/domain/errors/DomainErrors';
+import { Meteor } from 'meteor/meteor';
 
 if (Meteor.isServer) {
+  // Mock do Meteor para testes
+  const originalUserId = Meteor.userId;
+  Meteor.userId = () => 'user123';
+
   describe('MarkNotificationAsReadUseCase', function () {
     let useCase: MarkNotificationAsReadUseCase;
     let repository: NotificationRepository;
@@ -15,6 +20,11 @@ if (Meteor.isServer) {
 
       // Criar notificação de teste
       notificationId = await repository.create('user123', 'Test notification');
+    });
+
+    after(function () {
+      // Restaurar o método original
+      Meteor.userId = originalUserId;
     });
 
     it('deve marcar notificação como lida', async function () {

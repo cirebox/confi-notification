@@ -1,0 +1,28 @@
+{
+  "all": true,
+  "include": [
+    "imports/**/*.ts",
+    "server/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "**/*.tests.ts",
+    "tests/**/*",
+    "node_modules/**/*",
+    ".meteor/**/*",
+    "client/**/*"
+  ],
+  "reporter": [
+    "text",
+    "html",
+    "lcov"
+  ],
+  "report-dir": "coverage",
+  "check-coverage": false,
+  "cache": true,
+  "instrument": true,
+  "extension": [
+    ".ts"
+  ]
+}
