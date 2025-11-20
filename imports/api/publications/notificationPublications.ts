@@ -1,46 +1,77 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
-import { NotificationRepository } from '../../infrastructure/repositories/NotificationRepository';
+import { NotificationRepositoryWithRedis } from '../../infrastructure/repositories/NotificationRepositoryWithRedis';
 import { NotificationValidator } from '../../domain/validators/NotificationValidator';
 import { ErrorHandler, ErrorCode } from '../../application/errors/ErrorHandler';
+import { NotificationsCollection } from '../../domain/entities/Notification';
 
-const repository = new NotificationRepository();
+const repository = new NotificationRepositoryWithRedis();
 
-Meteor.publish('notifications.list', function (params: { userId: string; page?: number; limit?: number }) {
-  check(params, {
-    userId: String,
-    page: Match.Optional(Match.Integer),
-    limit: Match.Optional(Match.Integer),
-  });
+Meteor.publish(
+  'notifications.list',
+  async function (params: { page?: number; limit?: number }) {
+    check(params, {
+      page: Match.Optional(Match.Integer),
+      limit: Match.Optional(Match.Integer),
+    });
 
-  const { userId, page = 1, limit = 10 } = params;
+    if (!this.userId) {
+      throw ErrorHandler.createMeteorError(
+        ErrorCode.VALIDATION_ERROR,
+        'Usuário não autenticado. Faça login primeiro.'
+      );
+    }
 
-  if (!userId || userId.trim().length === 0) {
-    throw ErrorHandler.createMeteorError(
-      ErrorCode.VALIDATION_ERROR,
-      'userId é obrigatório'
+    const { page = 1, limit = 10 } = params;
+
+    const { skip, limit: safeLimit } = NotificationValidator.validatePagination(
+      page,
+      limit
     );
+    const sanitizedUserId = NotificationValidator.sanitizeString(this.userId);
+
+    // Publicar metadados de paginação (calcular total de forma assíncrona)
+    const totalRecords = await NotificationsCollection.find({
+      userId: sanitizedUserId,
+      deletedAt: { $exists: false },
+    }).countAsync();
+
+    const totalPages = Math.ceil(totalRecords / safeLimit);
+    this.added('pagination', `notifications_${sanitizedUserId}`, {
+      page,
+      limit: safeLimit,
+      total: totalRecords,
+      totalPages,
+      hasMore: page < totalPages,
+    });
+
+    return repository.findByUserId(sanitizedUserId, skip, safeLimit);
   }
+);
 
-  const { skip, limit: safeLimit } = NotificationValidator.validatePagination(page, limit);
-  const sanitizedUserId = NotificationValidator.sanitizeString(userId);
+Meteor.publish(
+  'notifications.unreadCount',
+  async function (params?: { userId?: string }) {
+    // Aceitar params vazio/undefined
+    if (params) {
+      check(params, {
+        userId: Match.Optional(String),
+      });
+    }
 
-  return repository.findByUserId(sanitizedUserId, skip, safeLimit);
-});
+    if (!this.userId) {
+      throw ErrorHandler.createMeteorError(
+        ErrorCode.VALIDATION_ERROR,
+        'Usuário não autenticado. Faça login primeiro.'
+      );
+    }
 
-Meteor.publish('notifications.count', function (userId: string) {
-  check(userId, String);
+    const sanitizedUserId = NotificationValidator.sanitizeString(this.userId);
 
-  if (!userId || userId.trim().length === 0) {
-    throw ErrorHandler.createMeteorError(
-      ErrorCode.VALIDATION_ERROR,
-      'userId é obrigatório'
-    );
+    // Usar Redis para obter contagem (com fallback para MongoDB)
+    const unreadCount = await repository.getUnreadCount(sanitizedUserId);
+
+    this.added('counts', 'notifications_unread', { count: unreadCount });
+    this.ready();
   }
-
-  const sanitizedUserId = NotificationValidator.sanitizeString(userId);
-  const count = repository.countByUserId(sanitizedUserId);
-
-  this.added('counts', 'notifications', { count });
-  this.ready();
-});
+);
