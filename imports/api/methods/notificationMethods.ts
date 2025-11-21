@@ -105,8 +105,10 @@ Meteor.methods({
       });
 
       return { userId, success: true };
-    } catch (error: any) {
-      throw new Meteor.Error('registration-failed', error.message);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Erro desconhecido';
+      throw new Meteor.Error('registration-failed', message);
     }
   },
 });

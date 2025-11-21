@@ -20,24 +20,33 @@ Accounts.config({
 });
 
 // Validação de novos usuários (opcional)
-Accounts.validateNewUser((user: Meteor.User) => {
+Accounts.validateNewUser(() => {
   // Você pode adicionar validações customizadas aqui
   return true;
 });
 
 // Log de tentativas de login (para debug)
-Accounts.onLogin((loginInfo: { user?: Meteor.User; connection?: any }) => {
+Accounts.onLogin((loginInfo: { user?: Meteor.User; connection?: unknown }) => {
   console.log('✅ Login bem-sucedido:', loginInfo.user?.emails?.[0]?.address);
 });
 
-Accounts.onLoginFailure((loginInfo: { user?: Meteor.User; connection?: any; error?: any; allowed?: boolean; type?: string; methodName?: string }) => {
-  console.log('❌ Falha no login:', {
-    error: loginInfo.error?.reason,
-    allowed: loginInfo.allowed,
-    type: loginInfo.type,
-    methodName: loginInfo.methodName,
-  });
-});
+Accounts.onLoginFailure(
+  (loginInfo: {
+    user?: Meteor.User;
+    connection?: unknown;
+    error?: { reason?: string };
+    allowed?: boolean;
+    type?: string;
+    methodName?: string;
+  }) => {
+    console.log('❌ Falha no login:', {
+      error: loginInfo.error?.reason,
+      allowed: loginInfo.allowed,
+      type: loginInfo.type,
+      methodName: loginInfo.methodName,
+    });
+  }
+);
 
 export const initializeServer = () => {
   console.log('🚀 Servidor iniciado');

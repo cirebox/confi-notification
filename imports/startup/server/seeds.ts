@@ -23,8 +23,10 @@ export const seedNotifications = async (): Promise<void> => {
         console.error('❌ Usuário criado mas não encontrado no banco');
         return;
       }
-    } catch (error: any) {
-      console.error('❌ Erro ao criar usuário demo:', error.message);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error('❌ Erro ao criar usuário demo:', message);
       // Tentar buscar novamente
       demoUser = await Meteor.users.findOneAsync({
         'emails.address': 'demo@example.com',

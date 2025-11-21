@@ -31,6 +31,12 @@ interface RequestWithBody extends IncomingMessage {
     | Record<string, unknown>;
 }
 
+interface MeteorError {
+  statusCode?: number;
+  reason?: string;
+  message?: string;
+}
+
 // Configuração Swagger/OpenAPI
 const swaggerSpec = {
   openapi: '3.0.0',
@@ -349,7 +355,7 @@ WebApp.connectHandlers.use(
           })
           .catch((error) => {
             try {
-              const meteorError = ErrorHandler.handleDomainError(error) as any;
+              const meteorError = ErrorHandler.handleDomainError(error) as MeteorError;
               res.writeHead(meteorError.statusCode || 500, {
                 'Content-Type': 'application/json',
               });
@@ -363,7 +369,7 @@ WebApp.connectHandlers.use(
               res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
             }
           });
-      } catch (error: any) {
+      } catch (error: unknown) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
       }
@@ -398,7 +404,7 @@ WebApp.connectHandlers.use(
           })
           .catch((error) => {
             try {
-              const meteorError = ErrorHandler.handleDomainError(error) as any;
+              const meteorError = ErrorHandler.handleDomainError(error) as MeteorError;
               res.writeHead(meteorError.statusCode || 500, {
                 'Content-Type': 'application/json',
               });
@@ -412,7 +418,7 @@ WebApp.connectHandlers.use(
               res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
             }
           });
-      } catch (error: any) {
+      } catch (error: unknown) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
       }
@@ -446,7 +452,7 @@ WebApp.connectHandlers.use(
           })
           .catch((error) => {
             try {
-              const meteorError = ErrorHandler.handleDomainError(error) as any;
+              const meteorError = ErrorHandler.handleDomainError(error) as MeteorError;
               res.writeHead(meteorError.statusCode || 500, {
                 'Content-Type': 'application/json',
               });
@@ -460,7 +466,7 @@ WebApp.connectHandlers.use(
               res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
             }
           });
-      } catch (error: any) {
+      } catch (error: unknown) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
       }
@@ -494,7 +500,7 @@ WebApp.connectHandlers.use(
           })
           .catch((error) => {
             try {
-              const meteorError = ErrorHandler.handleDomainError(error) as any;
+              const meteorError = ErrorHandler.handleDomainError(error) as MeteorError;
               res.writeHead(meteorError.statusCode || 500, {
                 'Content-Type': 'application/json',
               });
@@ -508,7 +514,7 @@ WebApp.connectHandlers.use(
               res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
             }
           });
-      } catch (error: any) {
+      } catch (error: unknown) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Erro interno do servidor' }));
       }

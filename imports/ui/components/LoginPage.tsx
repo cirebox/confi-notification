@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
             authForm.email,
             authForm.password,
             { name: authForm.name },
-            (error: any) => {
+            (error: Meteor.Error | undefined) => {
               if (error) {
                 reject(error);
               } else {
@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
           Meteor.loginWithPassword(
             authForm.email,
             authForm.password,
-            (error: any) => {
+            (error: Meteor.Error | undefined) => {
               if (error) {
                 reject(error);
               } else {
@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
           Meteor.loginWithPassword(
             authForm.email,
             authForm.password,
-            (error: any) => {
+            (error: Meteor.Error | undefined) => {
               if (error) {
                 reject(error);
               } else {
@@ -65,8 +65,14 @@ const LoginPage: React.FC = () => {
           );
         });
       }
-    } catch (error: any) {
-      setError(error.reason || error.message || 'Erro na autenticação');
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'reason' in error
+          ? String(error.reason)
+          : error instanceof Error
+            ? error.message
+            : 'Erro na autenticação';
+      setError(errorMessage);
       setLoading(false);
     }
   };
@@ -76,7 +82,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       await new Promise<void>((resolve, reject) => {
-        Meteor.loginWithPassword('demo@example.com', 'demo', (error: any) => {
+        Meteor.loginWithPassword('demo@example.com', 'demo', (error: Meteor.Error | undefined) => {
           if (error) {
             reject(error);
           } else {
@@ -84,8 +90,12 @@ const LoginPage: React.FC = () => {
           }
         });
       });
-    } catch (error: any) {
-      setError(error.reason || 'Erro no login demo');
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'reason' in error
+          ? String(error.reason)
+          : 'Erro no login demo';
+      setError(errorMessage);
       setLoading(false);
     }
   };
