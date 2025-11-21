@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-11-20T03:03:16.058Z",
-  "coverage": {
-    "totalMethods": 15,
-    "totalTestedMethods": 15,
-    "overallCoverage": 100
-  },
-  "summary": "Análise de cobertura baseada nos testes unitários implementados"
-}

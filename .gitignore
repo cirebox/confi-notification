@@ -1,1 +1,35 @@
+# Dependencies
 node_modules/
+
+# Meteor
+.meteor/local/
+.meteor-build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+
+# Test coverage
+.nyc_output/
+coverage/
+coverage-report.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+
+# Instructions (não devem estar no repositório público)
+.github/instructions/
